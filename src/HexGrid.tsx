@@ -21,10 +21,24 @@ function hexPointsFlatTop(cx: number, cy: number, size: number): string {
     .join(" ");
 }
 
-function makeTiles(rows: number, cols: number): Tile[] {
+type AxialCoord = {
+  q: number;
+  r: number;
+};
+
+function axialToOddQOffset({ q, r }: AxialCoord): { row: number; col: number } {
+  const col = q;
+  const row = r + (q - (q & 1)) / 2;
+  return { row, col };
+}
+
+function makeHexTiles(radius: number): Tile[] {
   const tiles: Tile[] = [];
-  for (let row = 0; row < rows; row++) {
-    for (let col = 0; col < cols; col++) {
+  for (let q = -radius; q <= radius; q++) {
+    const rMin = Math.max(-radius, -q - radius);
+    const rMax = Math.min(radius, -q + radius);
+    for (let r = rMin; r <= rMax; r++) {
+      const { row, col } = axialToOddQOffset({ q, r });
       tiles.push({
         id: `${row},${col}`,
         row,
@@ -37,31 +51,63 @@ function makeTiles(rows: number, cols: number): Tile[] {
 }
 
 export function HexGrid({
-  rows = 10,
-  cols = 10,
+  radius = 8,
   size = 24,
 }: {
-  rows?: number;
-  cols?: number;
+  radius?: number;
   size?: number;
 }) {
   const [selectedId, setSelectedId] = useState<TileId | null>(null);
 
-  const tiles = useMemo(() => makeTiles(rows, cols), [rows, cols]);
+  const tiles = useMemo(() => makeHexTiles(radius), [radius]);
 
   const hexH = Math.sqrt(3) * size;
   const xStep = 1.5 * size;
 
+  const tileCenters = useMemo(() => {
+    return tiles.map((t) => {
+      const cx = t.col * xStep;
+      const cy = t.row * hexH + (t.col & 1) * (hexH / 2);
+      return { id: t.id, cx, cy };
+    });
+  }, [tiles, xStep, hexH]);
+
+  const bounds = useMemo(() => {
+    if (tileCenters.length === 0) {
+      return { minX: 0, minY: 0, maxX: 0, maxY: 0 };
+    }
+    return tileCenters.reduce(
+      (acc, tile) => {
+        return {
+          minX: Math.min(acc.minX, tile.cx),
+          minY: Math.min(acc.minY, tile.cy),
+          maxX: Math.max(acc.maxX, tile.cx),
+          maxY: Math.max(acc.maxY, tile.cy),
+        };
+      },
+      {
+        minX: tileCenters[0].cx,
+        minY: tileCenters[0].cy,
+        maxX: tileCenters[0].cx,
+        maxY: tileCenters[0].cy,
+      },
+    );
+  }, [tileCenters]);
+
   // Compute SVG bounds so it fits nicely
-  const svgW = (cols - 1) * xStep + 2 * size + size; // a little padding
-  const svgH = rows * hexH + hexH / 2 + size; // includes stagger + padding
+  const svgW = bounds.maxX - bounds.minX + 2 * size;
+  const svgH = bounds.maxY - bounds.minY + 2 * size;
 
   return (
     <div style={{ overflow: "auto", maxWidth: "100%" }}>
-      <svg width={svgW} height={svgH} viewBox={`${-size} ${-size} ${svgW} ${svgH}`}>
+      <svg
+        width={svgW}
+        height={svgH}
+        viewBox={`${bounds.minX - size} ${bounds.minY - size} ${svgW} ${svgH}`}
+      >
         {tiles.map((t) => {
           const cx = t.col * xStep;
-          const cy = t.row * hexH + (t.col % 2) * (hexH / 2);
+          const cy = t.row * hexH + (t.col & 1) * (hexH / 2);
           const points = hexPointsFlatTop(cx, cy, size);
 
           const isSelected = t.id === selectedId;
