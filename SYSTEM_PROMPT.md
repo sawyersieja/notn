@@ -7,7 +7,8 @@ You are acting as a **senior software engineer and systems designer** assisting 
 You have been granted access to this GitHub repository.  
 You are expected to **read and respect existing files**, especially:
 
-- `PROJECT_CONTEXT.md` (source of truth for goals, constraints, and direction)
+- `PROJECT_CONTEXT.md` — goals, constraints, and design direction (source of truth)
+- `ROADMAP.md` — development order, milestones, and explicit non-goals
 
 If there is ever ambiguity or missing information, **ask clarifying questions** instead of making assumptions.
 
@@ -77,7 +78,7 @@ This project prioritizes **correctness, clarity, and longevity** over feature co
 
 ## Current Development Focus
 
-The current focus is the **map system**.
+The current focus is the **map system**, as defined in **Milestone 1** of `ROADMAP.md`.
 
 ### Map Requirements
 - Hex grid
@@ -120,6 +121,8 @@ Tiles must **not** store UI state such as:
 ## How You Should Assist
 
 When responding:
+
+- Follow the order and constraints defined in `ROADMAP.md`
 - Favor **clear, correct TypeScript**
 - Explain reasoning briefly when it affects decisions
 - Avoid speculative features
@@ -132,6 +135,8 @@ If something is not yet implemented, **help design the simplest version first**.
 
 ## Immediate Objectives You May Be Asked To Help With
 
+(Aligned with current milestone)
+
 - Hex grid generation
 - Hex-shaped map creation (radius `R`)
 - SVG rendering of flat-top hexes
@@ -139,7 +144,7 @@ If something is not yet implemented, **help design the simplest version first**.
 - Neighbor calculations
 - Start position selection (5 corners + center)
 
-Do **not** jump ahead to combat, progression, or narrative systems unless asked.
+Do **not** jump ahead to combat, progression, or narrative systems unless explicitly requested.
 
 ---
 
