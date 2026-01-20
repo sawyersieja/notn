@@ -5,6 +5,8 @@ export type Tile = {
   row: number;
   col: number;
   owner: number | null; // later: PlayerId | null
+  kind: "normal" | "start" | "center" | "special";
+  threat: number;
 };
 
 type AxialCoord = {
@@ -54,6 +56,8 @@ function makeHexTiles(radius: number): Tile[] {
         row,
         col,
         owner: null,
+        kind: "normal",
+        threat: 0,
       });
     }
   }
@@ -61,10 +65,32 @@ function makeHexTiles(radius: number): Tile[] {
 }
 
 export function createHexMap(radius: number): HexMap {
-  return {
+  const map = {
     radius,
     tiles: makeHexTiles(radius),
   };
+
+  const tileIndex = buildTileIndex(map.tiles);
+  const { center, playerStarts } = getStartTiles(map, tileIndex);
+  const startIds = new Set(playerStarts.map((tile) => tile.id));
+  const specialCornerCoord: AxialCoord = { q: 0, r: -map.radius };
+  const specialCornerOffset = axialToOddQOffset(specialCornerCoord);
+  const specialCorner = tileIndex.get(`${specialCornerOffset.row},${specialCornerOffset.col}`);
+
+  map.tiles = map.tiles.map((tile) => {
+    if (tile.id === center.id) {
+      return { ...tile, kind: "center" };
+    }
+    if (startIds.has(tile.id)) {
+      return { ...tile, kind: "start" };
+    }
+    if (specialCorner && tile.id === specialCorner.id) {
+      return { ...tile, kind: "special" };
+    }
+    return tile;
+  });
+
+  return map;
 }
 
 export function getNeighborTiles(
@@ -94,7 +120,6 @@ export function getStartTiles(
   }
 
   const cornerCoords: AxialCoord[] = [
-    { q: 0, r: -map.radius },
     { q: map.radius, r: -map.radius },
     { q: map.radius, r: 0 },
     { q: 0, r: map.radius },
