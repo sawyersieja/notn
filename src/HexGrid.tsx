@@ -1,14 +1,7 @@
 // src/HexGrid.tsx
 import React, { useMemo, useState } from "react";
 
-type TileId = string;
-
-type Tile = {
-  id: TileId;
-  row: number;
-  col: number;
-  owner: number | null; // later: PlayerId | null
-};
+import { createHexMap, type TileId } from "./game/map";
 
 function hexPointsFlatTop(cx: number, cy: number, size: number): string {
   const angles = [0, 60, 120, 180, 240, 300].map((d) => (Math.PI / 180) * d);
@@ -21,35 +14,6 @@ function hexPointsFlatTop(cx: number, cy: number, size: number): string {
     .join(" ");
 }
 
-type AxialCoord = {
-  q: number;
-  r: number;
-};
-
-function axialToOddQOffset({ q, r }: AxialCoord): { row: number; col: number } {
-  const col = q;
-  const row = r + (q - (q & 1)) / 2;
-  return { row, col };
-}
-
-function makeHexTiles(radius: number): Tile[] {
-  const tiles: Tile[] = [];
-  for (let q = -radius; q <= radius; q++) {
-    const rMin = Math.max(-radius, -q - radius);
-    const rMax = Math.min(radius, -q + radius);
-    for (let r = rMin; r <= rMax; r++) {
-      const { row, col } = axialToOddQOffset({ q, r });
-      tiles.push({
-        id: `${row},${col}`,
-        row,
-        col,
-        owner: null,
-      });
-    }
-  }
-  return tiles;
-}
-
 export function HexGrid({
   radius = 8,
   size = 24,
@@ -59,7 +23,7 @@ export function HexGrid({
 }) {
   const [selectedId, setSelectedId] = useState<TileId | null>(null);
 
-  const tiles = useMemo(() => makeHexTiles(radius), [radius]);
+  const tiles = useMemo(() => createHexMap(radius).tiles, [radius]);
 
   const hexH = Math.sqrt(3) * size;
   const xStep = 1.5 * size;
