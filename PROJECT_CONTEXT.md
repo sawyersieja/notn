@@ -2,16 +2,17 @@
 
 ## Overview
 
-NOTN is a private, turn-based, asynchronous cooperative strategy game designed for **5 players**.
+NOTN is a private, turn-based, asynchronous strategy game designed for **exactly 5 players**.
 
 The game is:
 
 - **Persistent**
 - **Long-running** (3–12 months per campaign)
 - **Always available**
-- **Co-op PvE only**
+- **Primarily co-op PvE**, with potential for limited PvP mechanics later
 
-Players cooperate against environmental systems and hostile world forces.
+Players primarily cooperate against environmental systems and hostile world forces.  
+Direct PvP is **not a current focus**, but the design should avoid foreclosing that possibility entirely.
 
 ---
 
@@ -55,60 +56,55 @@ This project prioritizes **correctness, clarity, and longevity** over feature co
 
 ---
 
+## Core Gameplay Loop (Conceptual)
+
+1. Server determines whose turn it is
+2. That player is permitted to perform actions
+3. Player selects a tile they control
+4. Player submits an **action intent**
+5. Server validates the action
+6. Game state updates
+7. Victory / loss / pressure conditions are evaluated
+8. Player may end their turn, advancing to the next player
+
+Players may be inactive between turns without breaking the game.
+
+---
+
 ## Map Design (Current Focus)
 
-### Grid Type
 - Hex grid
-- **Flat-top hexes**
-- Clickable tiles
-- Most player actions begin by selecting a tile
-
-### Map Shape
-- Hex-shaped board (axial hex radius `R`)
-- 5 player start positions near **5 outer corners**
-- Center tile represents a **neutral / hostile environmental force**
-- One natural hex corner may be unused or reserved for special content
-
-This layout ensures:
-- Fair spatial balance
-- Equal distance to center
-- Clean geometry
+- Flat-top hexes
+- Hex-shaped board (axial radius `R`)
+- 5 player start positions near 5 outer corners
+- Center tile represents a neutral or hostile environmental force
 
 ---
 
 ## Coordinates & Storage
 
-- Tiles are stored using **offset coordinates**:  
-  `{ row, col }`
-- Neighbor calculations may internally convert to **axial coordinates**
-- Rendering math derives pixel positions from a single `size` (radius)
-- No per-tile width/height storage
+- Tiles stored as offset coordinates: `{ row, col }`
+- Axial coordinates may be used internally
+- Rendering derives pixel positions from a single hex `size`
 
 ---
 
 ## Tile Model (Early)
 
-Tiles are **data-only** objects.
+Tiles are data-only objects:
 
-Initial fields:
 - `id`
 - `row`
 - `col`
 - `owner: PlayerId | null`
 
-Tiles must **not** store UI state such as:
-- selection
-- hover
-- highlight
-
 ---
 
 ## Player Model (Early)
 
-- Exactly **5 human players**
-- Each player has a starting region
-- Players may be inactive temporarily without breaking the game
-- Roles / heroes are lightweight and non-MMO-style
+- Exactly 5 human players
+- Starting regions
+- Asynchronous play supported
 
 ---
 
@@ -116,44 +112,20 @@ Tiles must **not** store UI state such as:
 
 ### Current Focus
 - Hex grid generation
-- Hex-shaped map creation
 - SVG rendering
-- Tile selection & highlighting
+- Tile selection
 - Neighbor logic
-- Start position selection (5 corners + center)
-
-### Future Systems
-- Turn engine
-- Threat propagation
-- Player actions
-- Roles / abilities
-- Persistence
-- Narrative flavor
+- Start position selection
 
 ---
 
-## Non-Goals
+## Non-Goals (For Now)
 
-The following are explicitly **out of scope**:
-
-- PvP mechanics
 - Real-time combat
-- Monetization
 - Public matchmaking
-- Heavy graphics or animations
-- Daily login chores or grind mechanics
-
----
-
-## Guidance for AI Assistants
-
-When assisting with this project:
-
-- Prefer **simple, explicit TypeScript**
-- Avoid unnecessary abstractions
-- Avoid re-architecture without justification
-- Ask clarifying questions when unsure
-- Optimize for shipping a working game
+- Monetization
+- Heavy graphics
+- Grind mechanics
 
 ---
 
