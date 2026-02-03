@@ -2,53 +2,65 @@
 
 ## Overview
 
-NOTN is a private, asynchronous, turn-based strategy game for **exactly 5 players** (friends).
+NOTN is a private, asynchronous, turn-based strategy game for a **small fixed group of players**.
+
+- The default scenario uses **5 players** (friends)
+- The design should **not hard-code this limit**, allowing fewer players for testing or future variants
 
 Primary focus:
 - **Cooperative PvE** (with room for limited PvP later — not a current focus)
-- Long-term strategy over weeks/months
+- Long-term strategy over weeks or months
 - Deterministic, testable game logic
-- Asynchronous play (players can drop in/out)
+- Asynchronous play (players can drop in/out between turns)
+
+---
 
 ## Tech Stack
 
-Client:
+### Client
 - Vite + React + TypeScript
 - SVG rendering (flat-top hexes)
-- Mobile-friendly, no SSR, no SEO concerns
+- Mobile-friendly
+- No SSR, no SEO concerns
 
-Server (later milestone):
+### Server (later milestone)
 - Server-authoritative state
 - Clients submit **intent**, not state
 - Server validates and updates world state
 
-Auth (later milestone):
-- Simple username/password (private access only)
+### Authentication (later milestone)
+- Simple username/password
+- Private access only
+
+---
 
 ## Current Implementation Snapshot
 
-Map:
+### Map
 - Hex-shaped board generated from axial radius `R`
-- Tiles stored as `{ row, col }` (offset coords)
-- Helpers exist for converting offset <-> axial when needed
+- Tiles stored as `{ row, col }` (offset coordinates)
+- Helpers exist for converting offset ↔ axial coordinates
 - Deterministic special tiles:
-  - Center tile: `kind="center"`
-  - Five player start corners: `kind="start"`
-  - Reserved top-most corner: `kind="special"`
-  - Everything else: `kind="normal"`
+  - Center tile: `kind = "center"`
+  - Five player start corners: `kind = "start"`
+  - Reserved top-most corner: `kind = "special"`
+  - All others: `kind = "normal"`
 
-Tile fields (current):
+### Tile Fields (current)
 - `id`
 - `row`
 - `col`
-- `owner` (number | null for now)
-- `kind` ("normal" | "start" | "center" | "special")
-- `threat` (number, default 0)
+- `owner` (`PlayerId | null` — provisional)
+- `kind` (`"normal" | "start" | "center" | "special"`)
+- `threat` (`number`, default `0`)
 
-UI:
-- Click-to-select tiles works
-- `kind` affects temporary tile styling
-- `threat` is rendered inside each tile
+### UI
+- Click-to-select tiles
+- Temporary visual styling based on `kind`
+- `threat` value rendered inside each tile
+- Inspector panel shows selected tile data (read-only)
+
+---
 
 ## Development Philosophy
 
@@ -58,9 +70,19 @@ UI:
 - Minimal abstractions, incremental progress
 - Prioritize correctness and clarity over polish
 
+---
+
 ## Current Focus
 
-**Milestone 3:** Minimal Inspector UI (read-only) so selected tile state is inspectable.
-No gameplay actions, turns, resources, or server work yet.
+**Milestone 3 — Minimal Inspector UI**
+
+The goal is observability and debuggability:
+- Inspect tile data safely
+- No gameplay actions
+- No turn engine
+- No player system yet
+
+This milestone exists purely to make the current state visible and understandable.
 
 _End of PROJECT_CONTEXT.md_
+

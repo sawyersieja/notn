@@ -1,6 +1,6 @@
 # ROADMAP.md — NOTN
 
-This roadmap defines **what to work on next**, in what order, and what is explicitly **out of scope** at each stage.
+This roadmap defines **what to work on next**, in what order, and what is explicitly **out of scope**.
 It exists to keep development focused and prevent unnecessary refactors or scope creep.
 
 AI assistants should follow this roadmap strictly.
@@ -37,12 +37,12 @@ Completed:
 
 Completed:
 - `Tile.kind`: `"normal" | "start" | "center" | "special"`
-- `Tile.threat`: `number` (default 0)
+- `Tile.threat`: `number` (default `0`)
 - Deterministic reserved **special** corner (top-most)
-- Visual differentiation by `kind` (temporary styling)
+- Temporary visual differentiation by `kind`
 
 Notes:
-- Ownership is **data-only** for now; richer ownership rendering comes later.
+- Ownership exists only as data; richer ownership rules come later.
 
 Non-goals:
 - No actions
@@ -54,26 +54,25 @@ Non-goals:
 
 ## Milestone 3 — Minimal Inspector UI 🚧 (CURRENT)
 
-**Goal:** Make the current state **inspectable** and debuggable.
+**Goal:** Make the current game state **inspectable and debuggable**.
 
 ### Tasks
-- [ ] Add a small, fixed inspector panel (overlay or sidebar)
-- [ ] Show selected tile fields:
+- [x] Add a fixed inspector panel (overlay or sidebar)
+- [x] Show selected tile fields:
   - `id`
   - `row`, `col`
   - `kind`
-  - `owner` (even if null / number for now)
+  - `owner`
   - `threat`
-- [ ] Add two placeholder sections (read-only text):
-  - “Player (placeholder)” (no real player model yet)
-  - “Turn (placeholder)” (no real turn engine yet)
-- [ ] Keep gameplay actions disabled / non-existent
+- [x] Add placeholder sections:
+  - Player (placeholder)
+  - Turn (placeholder)
 
 ### Non-goals
-- No action buttons that mutate game state
+- No action buttons
 - No turn system
 - No resource system
-- No networking/server work yet
+- No networking/server work
 
 ---
 
@@ -81,9 +80,16 @@ Non-goals:
 
 **Goal:** Introduce players without gameplay complexity.
 
-- Define `Player` model (id 0–4, name, color, startTileId)
-- Assign ownership of start tiles
-- Render ownership visually (simple, consistent)
+Planned:
+- Define `Player` model (stable id, display name, color)
+- Associate players with start tiles
+- Assign tile ownership for start tiles
+- Render ownership visually (simple, non-interactive)
+
+Non-goals:
+- No abilities
+- No inventories
+- No diplomacy rules
 
 ---
 
@@ -91,8 +97,10 @@ Non-goals:
 
 **Goal:** Establish turn structure without mechanics.
 
-- Track current player and turn number
-- Allow ending turn
+Planned:
+- Track current turn number
+- Track active player
+- Allow ending a turn
 - Skip inactive players
 - Display turn info in UI
 
@@ -102,8 +110,9 @@ Non-goals:
 
 **Goal:** Introduce PvE pressure.
 
+Planned:
 - Threat propagation rules
-- Threat increases over time
+- Threat growth over time
 - Visualize threat
 - Setbacks (not instant game over)
 
@@ -114,10 +123,11 @@ Non-goals:
 Out of scope until further notice:
 - Real-time combat
 - Monetization
-- Public accounts/matchmaking
+- Public accounts or matchmaking
 - Heavy animations or 3D graphics
 - App-store deployment
 
 ---
 
 _End of ROADMAP.md_
+
