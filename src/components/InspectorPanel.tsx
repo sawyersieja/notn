@@ -27,26 +27,20 @@ export function InspectorPanel({ selectedTile }: InspectorPanelProps) {
           Selected Tile
         </h3>
         {selectedTile ? (
-          <div style={{ display: "grid", gap: 4 }}>
-            <div>
-              <strong>id:</strong> {selectedTile.id}
-            </div>
-            <div>
-              <strong>row:</strong> {selectedTile.row}
-            </div>
-            <div>
-              <strong>col:</strong> {selectedTile.col}
-            </div>
-            <div>
-              <strong>kind:</strong> {selectedTile.kind}
-            </div>
-            <div>
-              <strong>owner:</strong> {selectedTile.owner ?? "none"}
-            </div>
-            <div>
-              <strong>threat:</strong> {selectedTile.threat}
-            </div>
-          </div>
+          <dl style={{ display: "grid", gridTemplateColumns: "auto 1fr", gap: "4px 8px" }}>
+            <dt style={{ fontWeight: 600 }}>id:</dt>
+            <dd style={{ margin: 0 }}>{selectedTile.id}</dd>
+            <dt style={{ fontWeight: 600 }}>row:</dt>
+            <dd style={{ margin: 0 }}>{selectedTile.row}</dd>
+            <dt style={{ fontWeight: 600 }}>col:</dt>
+            <dd style={{ margin: 0 }}>{selectedTile.col}</dd>
+            <dt style={{ fontWeight: 600 }}>kind:</dt>
+            <dd style={{ margin: 0 }}>{selectedTile.kind}</dd>
+            <dt style={{ fontWeight: 600 }}>owner:</dt>
+            <dd style={{ margin: 0 }}>{selectedTile.owner ?? "none"}</dd>
+            <dt style={{ fontWeight: 600 }}>threat:</dt>
+            <dd style={{ margin: 0 }}>{selectedTile.threat}</dd>
+          </dl>
         ) : (
           <div style={{ color: "rgba(0,0,0,0.6)" }}>No tile selected.</div>
         )}
