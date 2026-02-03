@@ -1,7 +1,7 @@
 // src/HexGrid.tsx
 import React, { useMemo, useState } from "react";
 
-import { createHexMap, type TileId } from "./game/map";
+import { createHexMap, type Tile, type TileId } from "./game/map";
 
 function hexPointsFlatTop(cx: number, cy: number, size: number): string {
   const angles = [0, 60, 120, 180, 240, 300].map((d) => (Math.PI / 180) * d);
@@ -62,6 +62,13 @@ export function HexGrid({
   const svgW = bounds.maxX - bounds.minX + 2 * size;
   const svgH = bounds.maxY - bounds.minY + 2 * size;
 
+  const tileKindStyles: Record<Tile["kind"], { fill: string; stroke: string }> = {
+    normal: { fill: "rgba(255,255,255,0.9)", stroke: "currentColor" },
+    start: { fill: "rgba(59,130,246,0.2)", stroke: "rgb(37,99,235)" },
+    center: { fill: "rgba(234,179,8,0.25)", stroke: "rgb(202,138,4)" },
+    special: { fill: "rgba(168,85,247,0.2)", stroke: "rgb(147,51,234)" },
+  };
+
   return (
     <div style={{ overflow: "auto", maxWidth: "100%" }}>
       <svg
@@ -75,18 +82,18 @@ export function HexGrid({
           const points = hexPointsFlatTop(cx, cy, size);
 
           const isSelected = t.id === selectedId;
+          const tileStyle = tileKindStyles[t.kind] ?? tileKindStyles.normal;
 
           return (
             <g key={t.id} onClick={() => setSelectedId(t.id)} style={{ cursor: "pointer" }}>
               <polygon
                 points={points}
-                stroke="currentColor"
+                stroke={tileStyle.stroke}
                 strokeWidth={isSelected ? 3 : 1}
-                fill={isSelected ? "rgba(0,0,0,0.08)" : "transparent"}
+                fill={isSelected ? "rgba(0,0,0,0.08)" : tileStyle.fill}
               />
-              {/* tiny coord label for debugging */}
               <text x={cx} y={cy} textAnchor="middle" dominantBaseline="middle" fontSize={10}>
-                {t.row},{t.col}
+                {t.threat}
               </text>
             </g>
           );
