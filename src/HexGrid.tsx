@@ -1,6 +1,7 @@
 // src/HexGrid.tsx
 import React, { useMemo, useState } from "react";
 
+import { InspectorPanel } from "./components/InspectorPanel";
 import { createHexMap, type Tile, type TileId } from "./game/map";
 
 function hexPointsFlatTop(cx: number, cy: number, size: number): string {
@@ -24,6 +25,10 @@ export function HexGrid({
   const [selectedId, setSelectedId] = useState<TileId | null>(null);
 
   const tiles = useMemo(() => createHexMap(radius).tiles, [radius]);
+  const tilesById = useMemo(() => {
+    return new Map<TileId, Tile>(tiles.map((tile) => [tile.id, tile]));
+  }, [tiles]);
+  const selectedTile = selectedId ? tilesById.get(selectedId) ?? null : null;
 
   const hexH = Math.sqrt(3) * size;
   const xStep = 1.5 * size;
@@ -85,7 +90,11 @@ export function HexGrid({
           const tileStyle = tileKindStyles[t.kind] ?? tileKindStyles.normal;
 
           return (
-            <g key={t.id} onClick={() => setSelectedId(t.id)} style={{ cursor: "pointer" }}>
+            <g
+              key={t.id}
+              onClick={() => setSelectedId((current) => (current === t.id ? null : t.id))}
+              style={{ cursor: "pointer" }}
+            >
               <polygon
                 points={points}
                 stroke={tileStyle.stroke}
@@ -99,10 +108,7 @@ export function HexGrid({
           );
         })}
       </svg>
-
-      <div style={{ marginTop: 8 }}>
-        Selected: <b>{selectedId ?? "none"}</b>
-      </div>
+      <InspectorPanel selectedTile={selectedTile} />
     </div>
   );
 }
