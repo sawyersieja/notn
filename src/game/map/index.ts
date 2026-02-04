@@ -4,7 +4,7 @@ export type Tile = {
   id: TileId;
   row: number;
   col: number;
-  owner: number | null; // later: PlayerId | null
+  ownerId: string | null;
   kind: "normal" | "start" | "center" | "special";
   threat: number;
 };
@@ -55,7 +55,7 @@ function makeHexTiles(radius: number): Tile[] {
         id: `${row},${col}`,
         row,
         col,
-        owner: null,
+        ownerId: null,
         kind: "normal",
         threat: 0,
       });

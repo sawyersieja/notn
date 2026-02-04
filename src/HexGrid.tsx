@@ -2,7 +2,9 @@
 import React, { useMemo, useState } from "react";
 
 import { InspectorPanel } from "./components/InspectorPanel";
-import { createHexMap, type Tile, type TileId } from "./game/map";
+import type { Tile, TileId } from "./game/map";
+import { createGameState } from "./game/world";
+import type { Player } from "./game/player";
 
 function hexPointsFlatTop(cx: number, cy: number, size: number): string {
   const angles = [0, 60, 120, 180, 240, 300].map((d) => (Math.PI / 180) * d);
@@ -18,16 +20,25 @@ function hexPointsFlatTop(cx: number, cy: number, size: number): string {
 export function HexGrid({
   radius = 8,
   size = 24,
+  playerCount = 5,
 }: {
   radius?: number;
   size?: number;
+  playerCount?: number;
 }) {
   const [selectedId, setSelectedId] = useState<TileId | null>(null);
 
-  const tiles = useMemo(() => createHexMap(radius).tiles, [radius]);
+  const { map, players } = useMemo(
+    () => createGameState(radius, playerCount),
+    [radius, playerCount],
+  );
+  const tiles = map.tiles;
   const tilesById = useMemo(() => {
     return new Map<TileId, Tile>(tiles.map((tile) => [tile.id, tile]));
   }, [tiles]);
+  const playersById = useMemo(() => {
+    return new Map<Player["id"], Player>(players.map((player) => [player.id, player]));
+  }, [players]);
   const selectedTile = selectedId ? tilesById.get(selectedId) ?? null : null;
 
   const hexH = Math.sqrt(3) * size;
@@ -74,6 +85,15 @@ export function HexGrid({
     special: { fill: "rgba(168,85,247,0.2)", stroke: "rgb(147,51,234)" },
   };
 
+  const toRgba = (hex: string, alpha: number) => {
+    const normalized = hex.replace("#", "");
+    const value = Number.parseInt(normalized, 16);
+    const r = (value >> 16) & 255;
+    const g = (value >> 8) & 255;
+    const b = value & 255;
+    return `rgba(${r},${g},${b},${alpha})`;
+  };
+
   return (
     <div style={{ overflow: "auto", maxWidth: "100%" }}>
       <svg
@@ -88,6 +108,7 @@ export function HexGrid({
 
           const isSelected = t.id === selectedId;
           const tileStyle = tileKindStyles[t.kind] ?? tileKindStyles.normal;
+          const owner = t.ownerId ? playersById.get(t.ownerId) ?? null : null;
 
           return (
             <g
@@ -101,6 +122,14 @@ export function HexGrid({
                 strokeWidth={isSelected ? 3 : 1}
                 fill={isSelected ? "rgba(0,0,0,0.08)" : tileStyle.fill}
               />
+              {owner ? (
+                <polygon
+                  points={points}
+                  fill={toRgba(owner.color, 0.25)}
+                  stroke={owner.color}
+                  strokeWidth={1.5}
+                />
+              ) : null}
               <text x={cx} y={cy} textAnchor="middle" dominantBaseline="middle" fontSize={10}>
                 {t.threat}
               </text>
@@ -108,7 +137,7 @@ export function HexGrid({
           );
         })}
       </svg>
-      <InspectorPanel selectedTile={selectedTile} />
+      <InspectorPanel selectedTile={selectedTile} players={players} />
     </div>
   );
 }
