@@ -56,7 +56,7 @@ Non-goals:
 Completed:
 - Fixed inspector panel
 - Selected tile inspection (id, coords, kind, ownerId, threat)
-- Placeholder sections for Player and Turn
+- Placeholder section for Turn
 
 Non-goals:
 - No state mutation from UI
@@ -71,16 +71,25 @@ Non-goals:
 ### Tasks
 - [ ] Define `Player` model (id, optional name, color, startTileId)
 - [ ] Support **1–5 players** (not always exactly 5)
-- [ ] Assign ownership of start tiles to players deterministically
-- [ ] Update `Tile.ownerId` to reference player ids
-- [ ] Render tile ownership visually (simple color tint or overlay)
-- [ ] Resolve ownerId to player display name in Inspector UI (read-only)
+- [ ] Create a minimal `GameState` builder (`{ map, players }`)
+- [ ] Assign ownership of start tiles deterministically (`Tile.ownerId = Player.id`)
+- [ ] Render tile ownership visually (simple overlay/tint; temporary)
+- [ ] Inspector: list players and resolve ownerId -> player display name (read-only)
+- [ ] (Optional QoL) Ensure inspector text is readable regardless of OS/browser theme (explicit text color)
 
 ### Non-Goals
 - No turn engine
 - No player actions
 - No resources or combat
 - No networking or server logic
+- No persistence or authentication
+
+### Done Criteria
+Milestone 4 is done when:
+- Player data exists (1–5)
+- Start tiles are owned by those players
+- Ownership is visible in the grid
+- Inspector shows owner as a player (not raw id only) and lists players
 
 ---
 
@@ -121,4 +130,3 @@ Out of scope until further notice:
 ---
 
 _End of ROADMAP.md_
-

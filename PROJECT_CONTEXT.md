@@ -58,23 +58,24 @@ Limited PvP mechanics may be explored later, but are **not a current focus**.
 - `kind: "normal" | "start" | "center" | "special"`
 - `threat: number` (default `0`)
 
+### Player Fields (current direction)
+- `id: string` (stable internal id, e.g. `player-1`)
+- `name?: string` (optional display name / alias)
+- `color: string` (used for simple ownership rendering)
+- `startTileId: TileId`
+
+### World / Game State (current direction)
+- `GameState = { map, players }`
+- Players are created from the map start tiles deterministically.
+- Each player owns their `startTileId` by default (`tile.ownerId = player.id`).
+
 ### UI
 - Click-to-select tiles
 - Temporary visual styling by `kind`
 - `threat` value rendered inside tiles
 - Inspector panel displays selected tile fields
-
----
-
-## Player Model (Current Direction)
-
-- Player count is **flexible (1–5)**
-- Players are identified internally by a stable `playerId: string`
-- Players may optionally have a display name / alias
-- Tiles reference ownership via `ownerId`
-- UI should display player-friendly names when available
-
-There is **no turn logic or gameplay behavior yet** — players are data-only.
+- Inspector panel lists players (id/name/color/start tile)
+- Ownership is visualized as a simple overlay/tint (temporary)
 
 ---
 
@@ -93,9 +94,10 @@ There is **no turn logic or gameplay behavior yet** — players are data-only.
 
 **Milestone 4 — Player Model (Data Only)**
 
-The goal is to introduce players as data entities and assign starting tile ownership, **without** adding gameplay mechanics, turns, or actions.
+Introduce players as data entities and assign starting tile ownership, **without** adding gameplay mechanics, turns, or actions.
+
+**Note:** Small UI readability/contrast fixes are acceptable if they are minimal and do not introduce new systems.
 
 ---
 
 _End of PROJECT_CONTEXT.md_
-

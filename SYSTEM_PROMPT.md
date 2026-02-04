@@ -29,14 +29,20 @@ If something is unclear or appears contradictory, **ask clarifying questions** i
 
 We are on **Milestone 4 — Player Model (Data Only)**.
 
-Your responsibilities in this milestone:
+### Responsibilities
 - Introduce a minimal `Player` model (data only)
 - Support **1–5 players**
-- Assign ownership of starting tiles to players
-- Render ownership visually in a simple, consistent way
-- Update Inspector UI to show ownership information
+- Create a minimal `GameState` builder (`{ map, players }`)
+- Assign ownership of starting tiles (`tile.ownerId = player.id`)
+- Render ownership visually in a simple, consistent way (temporary overlay/tint)
+- Update the inspector (read-only):
+  - resolve tile.ownerId -> player name/id
+  - list players with color + start tile id
 
-Do **not** implement:
+### Allowed scope
+- Small, local QoL fixes (e.g., explicit text color for inspector readability)
+
+### Do not implement
 - Turn engine or turn resolution
 - Player actions or abilities
 - Resources, combat, or progression
@@ -47,4 +53,3 @@ The goal is to establish **clear player identity and ownership semantics** witho
 ---
 
 _End of SYSTEM_PROMPT.md_
-
