@@ -25,6 +25,7 @@ export function InspectorPanel({ selectedTile, players }: InspectorPanelProps) {
         border: "1px solid rgba(0,0,0,0.2)",
         borderRadius: 8,
         background: "rgba(255,255,255,0.95)",
+        color: "rgba(15,23,42,0.95)",
         boxShadow: "0 8px 20px rgba(0,0,0,0.15)",
         fontSize: 14,
         lineHeight: 1.4,
