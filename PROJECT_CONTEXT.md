@@ -2,16 +2,20 @@
 
 ## Overview
 
-NOTN is a private, asynchronous, turn-based strategy game for a **small fixed group of players**.
+NOTN is a private, asynchronous, turn-based strategy game for a **small number of players (initially 1–5)**.
 
-- The default scenario uses **5 players** (friends)
-- The design should **not hard-code this limit**, allowing fewer players for testing or future variants
+The game is:
+- Persistent
+- Long-running (weeks to months per campaign)
+- Always available
+- Asynchronous (players may be inactive between turns)
 
 Primary focus:
-- **Cooperative PvE** (with room for limited PvP later — not a current focus)
-- Long-term strategy over weeks or months
+- Cooperative PvE
+- Long-term strategic pressure
 - Deterministic, testable game logic
-- Asynchronous play (players can drop in/out between turns)
+
+Limited PvP mechanics may be explored later, but are **not a current focus**.
 
 ---
 
@@ -19,17 +23,17 @@ Primary focus:
 
 ### Client
 - Vite + React + TypeScript
-- SVG rendering (flat-top hexes)
+- SVG rendering (flat-top hex grid)
 - Mobile-friendly
 - No SSR, no SEO concerns
 
-### Server (later milestone)
+### Server (future milestone)
 - Server-authoritative state
 - Clients submit **intent**, not state
-- Server validates and updates world state
+- Server validates and updates the world
 
-### Authentication (later milestone)
-- Simple username/password
+### Authentication (future milestone)
+- Simple username / password
 - Private access only
 
 ---
@@ -38,27 +42,39 @@ Primary focus:
 
 ### Map
 - Hex-shaped board generated from axial radius `R`
-- Tiles stored as `{ row, col }` (offset coordinates)
-- Helpers exist for converting offset ↔ axial coordinates
+- Tiles stored using offset coordinates `{ row, col }`
+- Axial <-> offset helpers exist for internal logic
 - Deterministic special tiles:
   - Center tile: `kind = "center"`
-  - Five player start corners: `kind = "start"`
+  - Five outer corner start tiles: `kind = "start"`
   - Reserved top-most corner: `kind = "special"`
-  - All others: `kind = "normal"`
+  - All other tiles: `kind = "normal"`
 
 ### Tile Fields (current)
 - `id`
 - `row`
 - `col`
-- `owner` (`PlayerId | null` — provisional)
-- `kind` (`"normal" | "start" | "center" | "special"`)
-- `threat` (`number`, default `0`)
+- `ownerId: string | null`
+- `kind: "normal" | "start" | "center" | "special"`
+- `threat: number` (default `0`)
 
 ### UI
 - Click-to-select tiles
-- Temporary visual styling based on `kind`
-- `threat` value rendered inside each tile
-- Inspector panel shows selected tile data (read-only)
+- Temporary visual styling by `kind`
+- `threat` value rendered inside tiles
+- Inspector panel displays selected tile fields
+
+---
+
+## Player Model (Current Direction)
+
+- Player count is **flexible (1–5)**
+- Players are identified internally by a stable `playerId: string`
+- Players may optionally have a display name / alias
+- Tiles reference ownership via `ownerId`
+- UI should display player-friendly names when available
+
+There is **no turn logic or gameplay behavior yet** — players are data-only.
 
 ---
 
@@ -67,22 +83,19 @@ Primary focus:
 - Deterministic core logic
 - Core game logic must **not depend on React**
 - UI state is separate from game state
-- Minimal abstractions, incremental progress
-- Prioritize correctness and clarity over polish
+- Minimal abstractions
+- Incremental milestones
+- Favor clarity and correctness over polish
 
 ---
 
 ## Current Focus
 
-**Milestone 3 — Minimal Inspector UI**
+**Milestone 4 — Player Model (Data Only)**
 
-The goal is observability and debuggability:
-- Inspect tile data safely
-- No gameplay actions
-- No turn engine
-- No player system yet
+The goal is to introduce players as data entities and assign starting tile ownership, **without** adding gameplay mechanics, turns, or actions.
 
-This milestone exists purely to make the current state visible and understandable.
+---
 
 _End of PROJECT_CONTEXT.md_
 

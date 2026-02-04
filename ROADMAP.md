@@ -1,6 +1,6 @@
 # ROADMAP.md — NOTN
 
-This roadmap defines **what to work on next**, in what order, and what is explicitly **out of scope**.
+This roadmap defines **what to work on next**, in what order, and what is explicitly **out of scope** at each stage.
 It exists to keep development focused and prevent unnecessary refactors or scope creep.
 
 AI assistants should follow this roadmap strictly.
@@ -13,7 +13,7 @@ AI assistants should follow this roadmap strictly.
 - Prefer small, incremental changes
 - Do not refactor completed milestones without justification
 - UI should lag slightly behind the underlying data models
-- **No gameplay mechanics** unless the current milestone explicitly includes them
+- No gameplay mechanics unless explicitly allowed by the milestone
 
 ---
 
@@ -27,7 +27,7 @@ Completed:
 - Deterministic map generation
 - Map logic isolated under `src/game/map`
 - Neighbor helpers
-- Start tile selection (5 corners) + center tile selection
+- Center tile + five corner start tiles
 
 ---
 
@@ -38,11 +38,8 @@ Completed:
 Completed:
 - `Tile.kind`: `"normal" | "start" | "center" | "special"`
 - `Tile.threat`: `number` (default `0`)
-- Deterministic reserved **special** corner (top-most)
+- Deterministic reserved special corner (top-most)
 - Temporary visual differentiation by `kind`
-
-Notes:
-- Ownership exists only as data; richer ownership rules come later.
 
 Non-goals:
 - No actions
@@ -52,44 +49,38 @@ Non-goals:
 
 ---
 
-## Milestone 3 — Minimal Inspector UI 🚧 (CURRENT)
+## Milestone 3 — Minimal Inspector UI ✅ (COMPLETED)
 
-**Goal:** Make the current game state **inspectable and debuggable**.
+**Goal:** Make current game state inspectable and debuggable.
 
-### Tasks
-- [x] Add a fixed inspector panel (overlay or sidebar)
-- [x] Show selected tile fields:
-  - `id`
-  - `row`, `col`
-  - `kind`
-  - `owner`
-  - `threat`
-- [x] Add placeholder sections:
-  - Player (placeholder)
-  - Turn (placeholder)
+Completed:
+- Fixed inspector panel
+- Selected tile inspection (id, coords, kind, ownerId, threat)
+- Placeholder sections for Player and Turn
 
-### Non-goals
-- No action buttons
-- No turn system
-- No resource system
-- No networking/server work
+Non-goals:
+- No state mutation from UI
+- No gameplay actions
 
 ---
 
-## Milestone 4 — Player Model (Data Only)
+## Milestone 4 — Player Model (Data Only) 🚧 (CURRENT)
 
-**Goal:** Introduce players without gameplay complexity.
+**Goal:** Introduce players as data entities and assign ownership of starting tiles.
 
-Planned:
-- Define `Player` model (stable id, display name, color)
-- Associate players with start tiles
-- Assign tile ownership for start tiles
-- Render ownership visually (simple, non-interactive)
+### Tasks
+- [ ] Define `Player` model (id, optional name, color, startTileId)
+- [ ] Support **1–5 players** (not always exactly 5)
+- [ ] Assign ownership of start tiles to players deterministically
+- [ ] Update `Tile.ownerId` to reference player ids
+- [ ] Render tile ownership visually (simple color tint or overlay)
+- [ ] Resolve ownerId to player display name in Inspector UI (read-only)
 
-Non-goals:
-- No abilities
-- No inventories
-- No diplomacy rules
+### Non-Goals
+- No turn engine
+- No player actions
+- No resources or combat
+- No networking or server logic
 
 ---
 
@@ -98,9 +89,9 @@ Non-goals:
 **Goal:** Establish turn structure without mechanics.
 
 Planned:
-- Track current turn number
+- Track turn number
 - Track active player
-- Allow ending a turn
+- Allow ending turn
 - Skip inactive players
 - Display turn info in UI
 
@@ -113,7 +104,7 @@ Planned:
 Planned:
 - Threat propagation rules
 - Threat growth over time
-- Visualize threat
+- Visualize threat levels
 - Setbacks (not instant game over)
 
 ---
@@ -123,7 +114,7 @@ Planned:
 Out of scope until further notice:
 - Real-time combat
 - Monetization
-- Public accounts or matchmaking
+- Public matchmaking
 - Heavy animations or 3D graphics
 - App-store deployment
 

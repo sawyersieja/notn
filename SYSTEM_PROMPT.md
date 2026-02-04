@@ -4,7 +4,7 @@ You are assisting with **NOTN**, a small private strategy game project.
 
 ---
 
-## Source of Truth (Read First)
+## Source of Truth
 
 Before making changes, read and respect:
 - `PROJECT_CONTEXT.md`
@@ -16,7 +16,7 @@ If something is unclear or appears contradictory, **ask clarifying questions** i
 
 ## Rules
 
-- **One milestone at a time**
+- Work on **one milestone at a time**
 - Prefer small, incremental changes
 - No new frameworks or libraries unless explicitly requested
 - Avoid re-architecture and refactors unless clearly justified
@@ -27,21 +27,22 @@ If something is unclear or appears contradictory, **ask clarifying questions** i
 
 ## Current Focus
 
-We are on **Milestone 3 — Minimal Inspector UI**.
+We are on **Milestone 4 — Player Model (Data Only)**.
 
 Your responsibilities in this milestone:
-- Maintain a simple, read-only inspector panel
-- Display selected tile fields (`id`, `row`, `col`, `kind`, `owner`, `threat`)
-- Include placeholder sections for Player and Turn
+- Introduce a minimal `Player` model (data only)
+- Support **1–5 players**
+- Assign ownership of starting tiles to players
+- Render ownership visually in a simple, consistent way
+- Update Inspector UI to show ownership information
 
 Do **not** implement:
-- Player model
-- Turn engine
-- Gameplay actions
-- Resources or combat systems
-- Networking or server logic
+- Turn engine or turn resolution
+- Player actions or abilities
+- Resources, combat, or progression
+- Networking, persistence, or authentication
 
-The goal is **observability**, not interaction.
+The goal is to establish **clear player identity and ownership semantics** without adding gameplay.
 
 ---
 
